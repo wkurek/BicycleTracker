@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".DetailActivity"
+    android:background="#dfdfdf">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_event_black_24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/detail_date"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_height="1dip"
+            android:layout_width="match_parent"
+            android:background="#164d54" />
+
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:id="@+id/detail_map"
+            android:name="com.google.android.gms.maps.MapFragment">
+        </fragment>
+
+
+        <View
+            android:layout_height="1dip"
+            android:layout_width="match_parent"
+            android:background="#164d54" />
+
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/ic_timer_black_24dp"
+                android:padding="4dp"
+                android:background="@drawable/start_feature_round_button"/>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_marginLeft="6dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/detail_time"/>
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginLeft="4dp"
+                android:background="@drawable/start_feature_round_button"
+                android:padding="4dp"
+                android:src="@drawable/ic_swap_calls_black_24dp"/>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_marginLeft="6dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/detail_distance"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:padding="6dp"
+                android:background="@drawable/start_feature_round_button"
+                android:src="@drawable/avg_speed"/>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_marginLeft="6dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/detail_velocity"/>
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginLeft="4dp"
+                android:padding="4dp"
+                android:background="@drawable/start_feature_round_button"
+                android:src="@drawable/ic_directions_run_black_24dp"/>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_marginLeft="6dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/detail_calories"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_height="1dip"
+            android:layout_width="match_parent"
+            android:background="#164d54"
+            android:layout_marginBottom="6dp"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/detail_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+
+            <ImageView
+                android:src="@drawable/max_speed"
+                android:background="@drawable/start_feature_round_button"
+                android:padding="4dp"
+                android:layout_height="28dp"
+                android:layout_width="28dp"/>
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="28dp"
+                android:id="@+id/detail_chart_max_velocity"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="16sp"
+                android:layout_marginLeft="6dp"/>
+
+            <ImageView
+                android:src="@drawable/ic_timer_black_24dp"
+                android:background="@drawable/start_feature_round_button"
+                android:padding="4dp"
+                android:layout_height="28dp"
+                android:layout_width="28dp"
+                android:layout_marginLeft="6dp"/>
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="28dp"
+                android:id="@+id/detail_chart_time"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="18sp"
+                android:layout_marginLeft="6dp"/>
+
+            <ImageView
+                android:src="@mipmap/ic_terrain_black_24dp"
+                android:background="@drawable/start_feature_round_button"
+                android:padding="4dp"
+                android:layout_height="28dp"
+                android:layout_width="28dp"
+                android:layout_marginLeft="6dp"/>
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="28dp"
+                android:id="@+id/detail_chart_max_altitude"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="16sp"
+                android:layout_marginLeft="6dp"/>
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_height="1dip"
+            android:layout_width="match_parent"
+            android:background="#164d54" />
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/delete_white"
+                android:background="@drawable/start_round_button"
+                android:padding="6dp"
+                android:id="@+id/detail_button_delete"/>
+
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:src="@drawable/ic_share_white_24dp"
+                android:padding="6dp"
+                android:background="@drawable/start_round_button"
+                android:id="@+id/detail_button_share"/>
+
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/ic_file_upload_white_24dp"
+                android:padding="6dp"
+                android:background="@drawable/start_round_button"
+                android:id="@+id/detail_button_upload"/>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

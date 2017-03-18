@@ -1,0 +1,61 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="tracker.hfad.com.bicycletracker.StartFragment"
+    android:background="#dfdfdf">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="420dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:background="@drawable/start_round_button"
+                android:src="@mipmap/ic_play_arrow_white_48dp"
+                android:id="@+id/start_button"
+                android:onClick="startActivity"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:background="@drawable/start_feature_round_button"
+                android:src="@mipmap/ic_public_black_48dp"
+                android:id="@+id/start_browser_button"
+                android:layout_marginRight="30dp"/>
+
+            <ImageButton
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:background="@drawable/start_feature_round_button"
+                android:src="@mipmap/ic_exit_to_app_black_48dp"
+                android:id="@+id/start_logout_button"
+                android:layout_marginRight="30dp"/>
+
+            <ImageButton
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:background="@drawable/start_feature_round_button"
+                android:src="@mipmap/ic_gps_off_black_48dp"
+                android:id="@+id/start_gps_button"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

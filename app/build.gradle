@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+
+    defaultConfig {
+        applicationId "tracker.hfad.com.bicycletracker"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+
+
+    compile 'com.google.android.gms:play-services:9.0.0'
+    compile 'com.google.android.gms:play-services-ads:9.0.0'
+    compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.google.android.gms:play-services-gcm:9.0.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4'
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.github.npanigrahy:Custom-Calendar-View:v1.0'
+    compile 'com.robinhood.spark:spark:1.1.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
+}
+
+
+repositories {
+    maven { url "https://jitpack.io" }
+}

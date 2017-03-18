@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">BicycleTracker</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="positive_reaction">Yes</string>
+    <string name="negative_reaction">Cancel</string>
+
+    <string name="start">START ACTIVITY!</string>
+    <string name="stop_button">STOP</string>
+    <string name="pause_button">PAUSE</string>
+    <string name="resume">RESUME</string>
+
+    <string name="music">Music</string>
+
+    <string name="training_activity_noGPSConnection">no GPS connection</string>
+    <string name="training_activity_GPSConnection">GPS connection</string>
+
+    <string name="log_activity_login_input">login</string>
+    <string name="log_activity_password_input">password</string>
+    <string name="log_activity_login">Log in</string>
+    <string name="log_activity_register">Register</string>
+
+    <string name="summary_activity_save_to_databse">Save to database</string>
+
+    <string name="start_activity_recreation_info">Last training was finished unproperly. Do you want to continue it?</string>
+
+
+
+
+    <string-array name="options">
+        <item>Main menu</item>
+        <item>Start</item>
+        <item>Archeives</item>
+        <item>Settings</item>
+        <item>Goals</item>
+        <item>Calendar</item>
+        <item>ME</item>
+        <item>Log out</item>
+    </string-array>
+
+
+    <string-array name="activities">
+        <item>Bicycle</item>
+        <item>Running</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item>
+    </string-array>
+
+    <string-array name="term">
+        <item>day</item>
+        <item>month</item>
+        <item>year</item>
+    </string-array>
+
+
+
+    <string name="Settings">Settings</string>
+    <string name="activity_text">Activity:</string>
+    <string name="language_text">Language:</string>
+
+    <string name="save">SAVE ACTIVITY</string>
+
+    <string name="delete">Delete from Database</string>
+    <string name="share">Share with friends!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="PersonalBest">Personal records</string>
+
+
+</resources>
