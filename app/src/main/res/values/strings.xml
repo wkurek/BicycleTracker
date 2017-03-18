@@ -24,6 +24,8 @@
 
     <string name="start_activity_recreation_info">Last training was finished unproperly. Do you want to continue it?</string>
 
+    <string name="import_task_progress_text">Loading ...</string>
+
 
 
 

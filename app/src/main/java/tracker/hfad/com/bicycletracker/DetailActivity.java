@@ -324,8 +324,8 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
 
 
             //extern MySql database
-            ExternDatabaseTasks.SendTrainingDataTask externSaveTask = new ExternDatabaseTasks.SendTrainingDataTask(this, seconds, distance, calories,
-                    encodedLatLngList, JSONEncodedGeopoints, finished);
+            ExternDatabaseTasks.ImportTrainingDataTask externSaveTask = new ExternDatabaseTasks.ImportTrainingDataTask(this, seconds, distance, calories,
+                    encodedLatLngList, JSONEncodedGeopoints, finished, date);
 
             externSaveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
