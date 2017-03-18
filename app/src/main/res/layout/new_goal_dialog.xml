@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" 
+    android:layout_width="380dp"
+    android:layout_height="130dp">
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#164d54"
+        android:text="Set a new goal"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <EditText
+            android:layout_width="83dp"
+            android:layout_height="40dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:id="@+id/goal_max"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:textSize="18sp"
+            android:text="km"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"/>
+        <Spinner
+            android:layout_width="190dp"
+            android:layout_height="40dp"
+            android:id="@+id/goal_spinner"
+            ></Spinner>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

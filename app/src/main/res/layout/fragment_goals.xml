@@ -1,0 +1,79 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="tracker.hfad.com.bicycletracker.GoalsFragment"
+    android:background="#dfdfdf"
+    android:layout_marginRight="0dp">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="horizontal">
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:id="@+id/content_container"
+          android:orientation="vertical">
+
+
+
+
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="80dp"
+          android:layout_height="match_parent"
+          android:id="@+id/buttons_container"
+          android:orientation="vertical"
+          android:layout_gravity="center_horizontal">
+
+          <ImageButton
+              android:id="@+id/add_goal"
+              android:layout_width="65dp"
+              android:layout_height="65dp"
+              android:layout_marginTop="20dp"
+              android:layout_gravity="center_horizontal"
+              android:background="@drawable/start_feature_round_button"
+              android:src="@drawable/ic_add_black_24dp"
+              />
+
+          <ImageButton
+              android:id="@+id/sync"
+              android:layout_width="65dp"
+              android:layout_height="65dp"
+              android:layout_marginTop="20dp"
+              android:layout_gravity="center_horizontal"
+              android:background="@drawable/start_round_button"
+              android:src="@drawable/sync_white"
+              android:onClick="synchronize"/>
+
+          <ImageButton
+              android:id="@+id/delete_goal"
+              android:layout_width="65dp"
+              android:layout_height="65dp"
+              android:layout_marginTop="20dp"
+              android:layout_gravity="center_horizontal"
+              android:background="@drawable/start_round_button"
+              android:src="@drawable/delete_white"
+             />
+
+
+      </LinearLayout>
+
+
+
+
+   </LinearLayout>
+
+
+
+
+
+
+
+
+</FrameLayout>
