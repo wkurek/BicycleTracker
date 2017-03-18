@@ -1,2 +1,0 @@
-# BicycleTracker
-BicycleTracker Android application
