@@ -213,10 +213,15 @@ public class SummaryActivity extends Activity implements OnMapReadyCallback {
             saveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             //extern MySql database
-            ExternDatabaseTasks.SendTrainingDataTask externSaveTask = new ExternDatabaseTasks.SendTrainingDataTask(this, numberOfSeconds, distanceInMeters, calories,
-                    encodedLatLngList, JSONEncodedGeopoints, 1);
 
-            externSaveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if(DetailActivity.isNetworkAvailable(this)) //Chech if network connection is avaliable
+            {
+                ExternDatabaseTasks.ImportTrainingDataTask externSaveTask = new ExternDatabaseTasks.ImportTrainingDataTask(this, numberOfSeconds, distanceInMeters, calories,
+                        encodedLatLngList, JSONEncodedGeopoints, 1, getActualDate());
+
+                externSaveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
         }
 
         Intent intent = new Intent(this, MainActivity.class);

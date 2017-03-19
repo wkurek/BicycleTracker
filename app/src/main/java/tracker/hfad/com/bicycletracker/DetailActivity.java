@@ -312,7 +312,7 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
 
     public void uploadToInternet()
     {
-        if(isNetworkAvailable() && myGeoPointList!=null)
+        if(isNetworkAvailable(this) && myGeoPointList!=null)
         {
 
             Log.v("wysyłanie", "danych");
@@ -336,9 +336,9 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
 
     }
 
-    public boolean isNetworkAvailable()
+    public static boolean isNetworkAvailable(Context ctx)
     {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
