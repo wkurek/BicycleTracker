@@ -2,7 +2,7 @@
     <string name="app_name">BicycleTracker</string>
     <string name="title_activity_maps">Map</string>
 
-    <string name="positive_reaction">Yes</string>
+    <string name="positive_reaction">OK</string>
     <string name="negative_reaction">Cancel</string>
 
     <string name="start">START ACTIVITY!</string>
@@ -25,6 +25,11 @@
     <string name="start_activity_recreation_info">Last training was finished unproperly. Do you want to continue it?</string>
 
     <string name="import_task_progress_text">Loading ...</string>
+    <string name="import_task_server_error_0">Cannot access dtabase.</string>
+    <string name="import_task_server_error_1">Problem with server commiuniaction</string>
+    <string name="import_task_server_error_2">Training has been already in database.</string>
+    <string name="import_task_server_ok">Training has just been added to database successfully.</string>
+
 
 
 

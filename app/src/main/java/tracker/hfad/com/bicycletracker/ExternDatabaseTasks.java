@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.BufferedReader;
@@ -261,6 +262,7 @@ public class ExternDatabaseTasks
             TextView progressText = (TextView) view.findViewById(R.id.training_import_dialog_progress_text);
             progressText.setText(R.string.import_task_progress_text);
 
+
             dialogBuilder.setView(view)
                     .setPositiveButton(R.string.positive_reaction, new DialogInterface.OnClickListener()
                     {
@@ -354,8 +356,25 @@ public class ExternDatabaseTasks
         @Override
         protected void onPostExecute(String response)
         {
+            String serverInfo;
+
+            switch (response)
+            {
+                case "OK": serverInfo = context.getString(R.string.import_task_server_ok); break;
+                case "ERROR_1": serverInfo = context.getString(R.string.import_task_server_error_1); break;
+                case "ERROR_2": serverInfo = context.getString(R.string.import_task_server_error_2); break;
+                default: serverInfo = context.getString(R.string.import_task_server_error_0); break;
+            }
+
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.training_import_dialog_progress_bar);
+            progressBar.setVisibility(View.GONE);
+
+            TextView progressText = (TextView) view.findViewById(R.id.training_import_dialog_progress_text);
+            progressText.setVisibility(View.GONE);
+
             TextView serverText = (TextView) view.findViewById(R.id.training_import_dialog_server_info);
-            serverText.setText(response);
+            serverText.setText(serverInfo);
+
         }
 
     }
