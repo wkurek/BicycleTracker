@@ -30,7 +30,8 @@
     <string name="import_task_server_error_2">Training has been already in database.</string>
     <string name="import_task_server_ok">Training has just been added to database successfully.</string>
 
-
+    <string name="gpx_task_parse_exception">Program cannot create XML file properly</string>
+    <string name="gpx_task_successful_generation_info">File generated successfully</string>
 
 
 

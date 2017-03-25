@@ -68,6 +68,10 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
 
         trainingID = (Integer) getIntent().getExtras().get(ID);
 
+        GPXTask.GenerateGPX task = new GPXTask.GenerateGPX(this, trainingID);
+
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         try
         {
             SQLiteOpenHelper helper = new MainActivity.BicycleDatabaseHelper(this);
@@ -91,8 +95,6 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
                 JSONencodedGeoPointList = cursor.getString(5);
                 discipline = cursor.getInt(6);
                 finished = cursor.getInt(7);
-
-                Log.v("TRACK: ", encodedPolyLine);
 
                 myGeoPointList = new TrackerService.MyGeoPointList();
                 JSONArray jsonArray = new JSONArray(JSONencodedGeoPointList);

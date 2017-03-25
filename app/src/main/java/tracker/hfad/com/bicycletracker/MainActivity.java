@@ -97,7 +97,6 @@ public class MainActivity extends Activity {
             startTraining();
         }
 
-
         drawerList = (ListView) findViewById(R.id.drawer);
         drawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, getResources().getStringArray(R.array.options)));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
