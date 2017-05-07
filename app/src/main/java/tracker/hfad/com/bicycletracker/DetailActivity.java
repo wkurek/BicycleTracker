@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,16 +69,13 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
 
         trainingID = (Integer) getIntent().getExtras().get(ID);
 
-        GPXTask.GenerateGPX task = new GPXTask.GenerateGPX(this, trainingID);
-
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
         try
         {
             SQLiteOpenHelper helper = new MainActivity.BicycleDatabaseHelper(this);
             db = helper.getReadableDatabase();
 
-            Cursor cursor = db.query("ACTIVITIES", new String[]{"time", "distance", "calories", "date", "track", "geopoints", "discipline", "finished"}, "_id = ?",
+            Cursor cursor = db.query("ACTIVITIES", new String[]{"time", "distance", "calories", "date",
+                    "track", "geopoints", "discipline", "finished"}, "_id = ?",
                     new String[]{Integer.toString(trainingID)},null,null,null);
 
             if(cursor.moveToFirst())
@@ -102,7 +100,8 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
 
                 for(int i=0; i<jsonArray.length(); i+=3)
                 {
-                    TrackerService.MyGeoPoint point = new TrackerService.MyGeoPoint(jsonArray.getInt(i), jsonArray.getDouble(i+1), jsonArray.getDouble(i+2), track.get(i/3));
+                    TrackerService.MyGeoPoint point = new TrackerService.MyGeoPoint(jsonArray.getInt(i),
+                            jsonArray.getDouble(i+1), jsonArray.getDouble(i+2), track.get(i/3));
                     myGeoPointList.add(point);
                 }
 
@@ -143,6 +142,7 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
         ImageButton delete_button = (ImageButton) findViewById(R.id.detail_button_delete);
         ImageButton share_button = (ImageButton) findViewById(R.id.detail_button_share);
         ImageButton upload_button = (ImageButton) findViewById(R.id.detail_button_upload);
+        Button gpx_button = (Button) findViewById(R.id.detail_button_GPX);
 
         delete_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +167,15 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
                 uploadToInternet();
             }
         });
+
+        gpx_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                generateGPX();
+            }
+        });
+
 
         MapFragment map = ((MapFragment) getFragmentManager().findFragmentById(R.id.detail_map));
         map.getMapAsync(this);
@@ -336,6 +345,14 @@ public class DetailActivity extends Activity implements OnMapReadyCallback {
             Toast.makeText(DetailActivity.this, "Internet connection is not accessable", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void generateGPX()
+    {
+        GPXTask.GenerateGPX gpxTask = new GPXTask.GenerateGPX(this, trainingID, myGeoPointList.getLatLngList(),
+                SummaryActivity.encodeGeoPointListToJSON(myGeoPointList), date);
+
+        gpxTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public static boolean isNetworkAvailable(Context ctx)

@@ -236,8 +236,8 @@
             <ImageButton
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:src="@drawable/ic_share_white_24dp"
                 android:padding="6dp"
                 android:background="@drawable/start_round_button"
@@ -248,9 +248,19 @@
                 android:layout_height="70dp"
                 android:src="@drawable/ic_file_upload_white_24dp"
                 android:padding="6dp"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/start_round_button"
                 android:id="@+id/detail_button_upload"/>
 
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="@string/gpx_button"
+                android:textColor="#fff"
+                android:textSize="21sp"
+                android:padding="6dp"
+                android:background="@drawable/start_round_button"
+                android:id="@+id/detail_button_GPX"/>
 
 
         </LinearLayout>
