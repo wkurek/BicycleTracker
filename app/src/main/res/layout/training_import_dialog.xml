@@ -16,7 +16,6 @@
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:indeterminate="false"
             android:id="@+id/training_import_dialog_progress_bar"
             android:layout_gravity="center_horizontal" />
 

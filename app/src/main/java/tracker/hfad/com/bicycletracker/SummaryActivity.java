@@ -216,7 +216,8 @@ public class SummaryActivity extends Activity implements OnMapReadyCallback {
 
             if(DetailActivity.isNetworkAvailable(this)) //Chech if network connection is avaliable
             {
-                ExternDatabaseTasks.ImportTrainingDataTask externSaveTask = new ExternDatabaseTasks.ImportTrainingDataTask(this, numberOfSeconds, distanceInMeters, calories,
+                ExternDatabaseTasks.ImportTrainingDataTask externSaveTask = new ExternDatabaseTasks.ImportTrainingDataTask(
+                        this, numberOfSeconds, distanceInMeters, calories,
                         encodedLatLngList, JSONEncodedGeopoints, 1, getActualDate());
 
                 externSaveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -359,7 +360,7 @@ public class SummaryActivity extends Activity implements OnMapReadyCallback {
 
     public static String getActualDate()
     {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
 
         return dateFormat.format(date);

@@ -278,7 +278,7 @@ public class GoalsFragment extends Fragment {
                 if(type!=0)
                 {
                     String date = cursor.getString(3);
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     record_date = dateFormat.parse(date);
 
                     isGoalActual = !isGoalExpired(record_date);

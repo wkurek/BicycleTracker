@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="tracker.hfad.com.bicycletracker.StartFragment"
-    android:background="#dfdfdf">
+    android:background="#e4e4e4">
 
     <LinearLayout
         android:layout_width="match_parent"

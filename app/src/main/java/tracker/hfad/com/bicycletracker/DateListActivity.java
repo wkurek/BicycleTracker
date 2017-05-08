@@ -28,14 +28,13 @@ public class DateListActivity extends ListActivity {
     {
         super.onStart();
 
-
         try
         {
-
             SQLiteOpenHelper helper = new MainActivity.BicycleDatabaseHelper(this);
             db = helper.getReadableDatabase();
 
-            cursor = db.query("ACTIVITIES", new String[]{"_id", "date", "distance", "time"}, "date LIKE ?", new String[]{"%"+getIntent().getExtras().get(RODZAJ)+"%"},null,null,"date DESC");
+            cursor = db.query("ACTIVITIES", new String[]{"_id", "date", "distance", "time"}, "date LIKE ?",
+                    new String[]{"%"+getIntent().getExtras().get(RODZAJ)+"%"},null,null,"date DESC");
 
             ArcheivesListFragment.ActivitiesItemAdapter adapter = new ArcheivesListFragment.ActivitiesItemAdapter(this, cursor);
             setListAdapter(adapter);

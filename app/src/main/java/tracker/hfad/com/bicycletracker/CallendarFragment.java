@@ -1,7 +1,6 @@
 package tracker.hfad.com.bicycletracker;
 
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,11 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.Toast;
 
 import com.imanoweb.calendarview.CalendarListener;
@@ -35,11 +32,8 @@ public class CallendarFragment extends Fragment {
 
     CustomCalendarView calendarView;
 
-
-
-
-    private class DaysDecorator implements DayDecorator {
-
+    private class DaysDecorator implements DayDecorator
+    {
 
         @Override
         public void decorate(DayView dayView) {
@@ -51,7 +45,7 @@ public class CallendarFragment extends Fragment {
                 db = helper.getReadableDatabase();
 
                 Date date = dayView.getDate();
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 if(!((date).after(new Date())))
                 {
@@ -60,7 +54,7 @@ public class CallendarFragment extends Fragment {
 
                     if(cursor.moveToFirst())
                     {
-                        dayView.setBackgroundColor(Color.parseColor("#dfdfdf"));
+                        dayView.setBackgroundColor(Color.parseColor("#f3f7f9"));
                     }
 
                     cursor.close();
@@ -72,14 +66,8 @@ public class CallendarFragment extends Fragment {
             {
                 Toast.makeText(getActivity(), "Database is not accessable", Toast.LENGTH_SHORT).show();
             }
-
-
-
-
         }
     }
-
-
 
 
     public CallendarFragment() {}
@@ -98,8 +86,6 @@ public class CallendarFragment extends Fragment {
     {
         super. onStart();
 
-
-
         calendarView = (CustomCalendarView) getActivity().findViewById(R.id.calendar_view);
         Calendar currentCalendar = Calendar.getInstance(Locale.getDefault());
         calendarView.setFirstDayOfWeek(Calendar.MONDAY);
@@ -109,7 +95,7 @@ public class CallendarFragment extends Fragment {
             @Override
             public void onDateSelected(Date date)
             {
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 final String selectedDate = dateFormat.format(date);
 
@@ -130,12 +116,6 @@ public class CallendarFragment extends Fragment {
         calendarView.setDecorators(decorators);
         calendarView.refreshCalendar(currentCalendar);
 
-
-
-
     }
-
-
-
 }
 

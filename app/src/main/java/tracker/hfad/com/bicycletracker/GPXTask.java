@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 
+
 public class GPXTask
 {
 
@@ -169,8 +170,8 @@ public class GPXTask
 
         static String generateGPXDateFormat(String startDate, int delay)
         {
-            SimpleDateFormat simpleDateFormatInput = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            SimpleDateFormat simpleDateFormatOutput = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss'Z'");
+            SimpleDateFormat simpleDateFormatInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormatOutput = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
             Date date;
 
@@ -184,7 +185,6 @@ public class GPXTask
                 Log.v("GPX generation: ", "date parse exception");
 
                 date = new Date();
-                return simpleDateFormatOutput.format(date);
             }
 
             return simpleDateFormatOutput.format(date);

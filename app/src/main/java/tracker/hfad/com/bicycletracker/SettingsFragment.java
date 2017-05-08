@@ -1,6 +1,7 @@
 package tracker.hfad.com.bicycletracker;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -78,6 +80,18 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        Button transferButton = (Button) view.findViewById(R.id.settings_transfer_button);
+        transferButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                ExternDatabaseTasks.ImportDataFromServerTask importDataFromServerTask =
+                        new ExternDatabaseTasks.ImportDataFromServerTask(getActivity());
+
+                importDataFromServerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
 
