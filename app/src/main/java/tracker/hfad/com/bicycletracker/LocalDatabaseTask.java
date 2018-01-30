@@ -37,7 +37,7 @@ public class LocalDatabaseTask
         @Override
         protected void onPreExecute()
         {
-            String actualDate = SummaryActivity.getActualDate();
+            String actualDate = SummaryActivity.getCurrentDate();
             int dyscypline = SaveSharedPreference.getUserActivity(context);
 
             activityValues = new ContentValues();
@@ -105,7 +105,7 @@ public class LocalDatabaseTask
         @Override
         protected void onPreExecute()
         {
-            String actualDate = SummaryActivity.getActualDate();
+            String actualDate = SummaryActivity.getCurrentDate();
             int dyscypline = SaveSharedPreference.getUserActivity(context);
 
             activityValues = new ContentValues();

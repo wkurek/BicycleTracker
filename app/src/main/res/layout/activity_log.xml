@@ -47,7 +47,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
             android:textColor="#f8f4e3"
-            android:onClick="log"
             android:id="@+id/log_log_button"/>
 
 
@@ -60,8 +59,7 @@
             android:textSize="28sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
-            android:textColor="#f8f4e3"
-            android:onClick="register"/>
+            android:textColor="#f8f4e3"/>
 
     </LinearLayout>
 

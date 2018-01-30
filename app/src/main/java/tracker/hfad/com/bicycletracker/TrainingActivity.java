@@ -181,7 +181,7 @@ public class TrainingActivity extends Activity {
         intent.putExtra(SummaryActivity.CALORIES, calories);
 
         TrackerService.MyGeoPointList myGeoPointList = trackerService.getGeoPointList();
-        intent.putParcelableArrayListExtra(SummaryActivity.GEOPOINTLIST, myGeoPointList);
+        intent.putParcelableArrayListExtra(SummaryActivity.GEO_POINT_LIST, myGeoPointList);
 
         startActivity(intent);
     }
