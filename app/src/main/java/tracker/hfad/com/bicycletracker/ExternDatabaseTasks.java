@@ -195,8 +195,6 @@ public class ExternDatabaseTasks
 
             importDialog = dialogBuilder.create();
             importDialog.show();
-
-
         }
 
         @Override
@@ -493,7 +491,7 @@ public class ExternDatabaseTasks
 
         private boolean existsInLocalDatabase(Integer time, String date)
         {
-            Cursor cursor = sqLiteDatabase.query("ACTIVITIES", new String[]{"_id"}, "date=? AND date=?",
+            Cursor cursor = sqLiteDatabase.query("ACTIVITIES", new String[]{"_id"}, "time=? AND date=?",
                     new String[]{time.toString(), date}, null, null, null);
 
             int recordsNumber  = cursor.getCount();

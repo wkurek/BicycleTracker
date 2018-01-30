@@ -41,15 +41,14 @@ import java.util.Date;
 
 public class GoalsFragment extends Fragment {
 
-    LinearLayout container;
+    LinearLayout goalsContainer;
 
     public GoalsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-
+                             Bundle savedInstanceState)
+    {
         return inflater.inflate(R.layout.fragment_goals, container, false);
     }
 
@@ -62,7 +61,7 @@ public class GoalsFragment extends Fragment {
         ImageButton add_button = (ImageButton) getView().findViewById(R.id.add_goal);
         imageView.setOnDragListener(new MyDragListener());
 
-        add_button.setOnClickListener(new View.OnClickListener() {
+        add_button.setOnClickListener(new View.OnClickListener() {//TO CHANGE!!!!
             @Override
             public void onClick(View v)
             {
@@ -144,7 +143,7 @@ public class GoalsFragment extends Fragment {
                                     Toast.makeText(getActivity(), "Cannot reach database", Toast.LENGTH_SHORT).show();
                                 }
 
-                                refreshView();
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -159,18 +158,17 @@ public class GoalsFragment extends Fragment {
             }
         });
 
-        container = (LinearLayout) getActivity().findViewById(R.id.content_container);
-        refreshView();
+
     }
 
 
 
 
-    public class MyLayout extends LinearLayout
+    public class SingleGoalView extends LinearLayout
     {
-        int id; //referes to _id field in SQlite db in table GOALS
+        private int id;
 
-        public MyLayout(Context context, int id)
+        public SingleGoalView(Context context, int id)
         {
             super(context);
             this.id = id;
@@ -178,177 +176,47 @@ public class GoalsFragment extends Fragment {
             setOrientation(LinearLayout.VERTICAL);
         }
 
-        void createView(int max,int progress, String date)
+        void createSingleGoalView(int max, int progress, String finishDate)
         {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.single_goal, null);
 
-            TextView label1 = (TextView) view.findViewById(R.id.goal_date);
-            TextView label2 = (TextView) view.findViewById(R.id.goal_progress);
+            if(view == null || goalsContainer == null) return;
 
-            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.goal_progressbar);
+            TextView finishDateField = (TextView) view.findViewById(R.id.single_goal_finish_date);
+            TextView progressField = (TextView) view.findViewById(R.id.single_goal_progress);
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.single_goal_progressbar);
+
+            if(progress > max) progress = max;
 
             progressBar.setMax(max);
             progressBar.setProgress(progress);
 
-                max/=1000;
-                progress/=1000;
-
-            if(!date.equals(""))  label1.setText("Active to " + date);
-
-            label2.setText(Integer.toString(progress) + " / " + Integer.toString(max) + " km");
-
+            finishDateField.setText(getString(R.string.single_goal_finish_date_description, finishDate));
+            progressField.setText(getString(R.string.single_goal_progress_description, progress, max));
 
             setOnTouchListener(new MyTouchListener());
 
             this.addView(view);
-            container.addView(this);
-        }
-
-
-        void createView(int max,int progress, int type)
-        {
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.single_goal, null);
-
-            TextView label1 = (TextView) view.findViewById(R.id.goal_date);
-            TextView label2 = (TextView) view.findViewById(R.id.goal_progress);
-
-            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.goal_progressbar);
-
-            progressBar.setMax(max);
-            progressBar.setProgress(progress);
-
-            max/=1000;
-            progress/=1000;
-
-            switch(type)
-            {
-                case 0: label1.setText("Achieved one training goal");
-                        break;
-                case 1: label1.setText("Achieved one day goal");
-                        break;
-                case 2: label1.setText("Achieved one week goal");
-                        break;
-                case 3: label1.setText("Achieved one month goal");
-                        break;
-                case 4: label1.setText("Achieved one year goal");
-                        break;
-            }
-
-
-            label2.setText(Integer.toString(progress) + " / " + Integer.toString(max) + " km");
-
-
-            setOnTouchListener(new MyTouchListener());
-
-            this.addView(view);
-            container.addView(this);
+            goalsContainer.addView(this);
         }
 
         public int getId()
         {
             return  this.id;
         }
-
     }
 
-    public void refreshView()
+    public void refreshGoalsContainer()
     {
+        if(goalsContainer == null) return;
 
-        if(container.getChildCount() > 0)
+        if(goalsContainer.getChildCount() > 0)
         {
-            container.removeAllViews();
+            goalsContainer.removeAllViews();
         }
 
-        try{
-            SQLiteOpenHelper dbHelper = new MainActivity.BicycleDatabaseHelper(getActivity());
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
+        //ASCYNC TASK, ADD SINGLE GOALS TO CONTAINER
 
-            Cursor cursor = db.query("GOALS", new String[] {"_id", "max", "progress", "date", "type", "sync"}, "sync = ? OR sync = ?", new String[] {Integer.toString(0), Integer.toString(1)}, null, null, "_id DESC");
-
-            while(cursor.moveToNext()) {
-
-                Integer id = cursor.getInt(0);
-                Date record_date;
-                boolean isGoalActual = true;
-
-                int max = cursor.getInt(1);
-                int progress = cursor.getInt(2);
-                int type = cursor.getInt(4);
-
-                if(type!=0)
-                {
-                    String date = cursor.getString(3);
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    record_date = dateFormat.parse(date);
-
-                    isGoalActual = !isGoalExpired(record_date);
-                }
-
-
-                if (progress >= max && isGoalActual) {
-                    //goal achieved
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                    final View view = LayoutInflater.from(getActivity()).inflate(R.layout.basic_dialog, null);
-
-                    TextView text_field =(TextView) view.findViewById(R.id.basic_dialog_text);
-                    text_field.setText("Congratulation!\nYou have achieved a new goal!");
-
-                    builder.setView(view)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    Dialog dialog = builder.create();
-                    dialog.show();
-
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("sync", 4);
-                    db.update("GOALS", contentValues, "_id = ?", new String[]{id.toString()});
-
-                    MyLayout layout = new MyLayout(getActivity(), id);
-                    layout.createView(cursor.getInt(1), cursor.getInt(2), cursor.getInt(4));
-
-                } else if (isGoalActual || type == 0) {
-                    //goals to display
-
-                    MyLayout layout = new MyLayout(getActivity(), id);
-                    layout.createView(cursor.getInt(1), cursor.getInt(2), cursor.getString(3));
-
-                } else if (cursor.getInt(5) == 4) {
-                    //achieved goals to display
-
-                    MyLayout layout = new MyLayout(getActivity(), id);
-                    layout.createView(cursor.getInt(1), cursor.getInt(2), cursor.getInt(4));
-                } else {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("sync", 2);
-
-                    db.update("GOALS", contentValues, "_id = ?", new String[]{id.toString()});
-                }
-            }
-
-                cursor.close();
-                db.close();
-
-        } catch(SQLiteException e)
-        {
-            Toast toast = Toast.makeText(getActivity(), "Database is not accessable", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        catch(ParseException e)
-        {
-            Toast toast = Toast.makeText(getActivity(), "Parse exception", Toast.LENGTH_SHORT);
-            toast.show();
-        }
 
     }
 
@@ -396,12 +264,12 @@ public class GoalsFragment extends Fragment {
                     imageButton.setImageResource(R.drawable.delete_white);
                     break;
                 case DragEvent.ACTION_DROP:
-                    MyLayout box = (MyLayout) event.getLocalState();
+                    SingleGoalView box = (SingleGoalView) event.getLocalState();
                     Integer id = box.getId();
-                    updateRecord(id);
+                    deleteSingleGoal(id);
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    refreshView();
+                    refreshGoalsContainer();
                     imageButton = (ImageButton) v;
                     imageButton.setImageResource(R.drawable.delete_white);
                 default:
@@ -411,45 +279,10 @@ public class GoalsFragment extends Fragment {
         }
     }
 
-    void updateRecord(Integer id)
+    void deleteSingleGoal(Integer id)
     {
-        final int ID = id;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.basic_dialog, null);
-
-        TextView text =(TextView) view.findViewById(R.id.basic_dialog_text);
-        text.setText("Do you want to delete this goal?");
-
-        builder.setView(view)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-
-                        SQLiteOpenHelper dbHelper = new MainActivity.BicycleDatabaseHelper(getActivity());
-                        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                        ContentValues values = new ContentValues();
-                        values.put("sync", 2);
-
-                        db.update("GOALS", values, "_id = ?", new String[] {Integer.toString(ID)});
-                        db.close();
-
-                        refreshView();
-
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        dialog.cancel();
-                    }
-                });
-
-        Dialog dialog = builder.create();
-        dialog.show();
-
+        //ASCYNC TASK, DELETE SINGLE GOAL
 
     }
 

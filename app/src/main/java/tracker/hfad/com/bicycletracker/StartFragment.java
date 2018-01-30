@@ -1,5 +1,9 @@
 package tracker.hfad.com.bicycletracker;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -15,9 +19,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,14 +32,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class StartFragment extends Fragment {
+    private static final int REQUEST_LOCATION_PERMISSION_CODE = 43;
 
-    private boolean gpsFixed;
-    private long lastLocationChangeTime;
+    private static final int LOCATION_UPDATES_MINIMAL_TIME = 1600;
+    private static final int LOCATION_UPDATES_MINIMAL_DISTANCE = 1;
+
+    private static final String TAG = StartFragment.class.getSimpleName();
+
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+
+    private boolean requestingLocationUpdates = false;
+    private long lastLocationUpdateTime = 0;
+    private boolean locationProviderAvailable = false;
+
     private Handler gpsStatusHandler;
     private Runnable gpsStatusUpdatingTask;
+
+    ImageButton gpsButton;
 
     public StartFragment() {}
 
@@ -40,76 +61,13 @@ public class StartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_start, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_start, container, false);
 
+        gpsButton = (ImageButton) view.findViewById(R.id.start_gps_button);
+        ImageButton browserButton = (ImageButton) view.findViewById(R.id.start_browser_button);
+        ImageButton logoutButton = (ImageButton) view.findViewById(R.id.start_logout_button);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        provideRecreationOfTraining();
-
-        lastLocationChangeTime = -1;
-
-        final ImageButton gps_button = (ImageButton) getView().findViewById(R.id.start_gps_button);
-        ImageButton browser_button = (ImageButton) getView().findViewById(R.id.start_browser_button);
-        ImageButton logout_button = (ImageButton) getView().findViewById(R.id.start_logout_button);
-
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                lastLocationChangeTime = System.currentTimeMillis();
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-                if(status == LocationProvider.OUT_OF_SERVICE) gpsFixed = false;
-                else gpsFixed = true;
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) { gpsFixed = true; }
-
-            @Override
-            public void onProviderDisabled(String provider) { gpsFixed = false; }
-        };
-
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {return;}
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1600, 1, locationListener);
-
-        gpsStatusUpdatingTask = new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if(isGPSFixed())
-                {
-                    gps_button.setBackgroundResource(R.drawable.start_round_button);
-                    gps_button.setImageResource(R.mipmap.ic_gps_fixed_white_48dp);
-
-                }else
-                {
-                    gps_button.setBackgroundResource(R.drawable.start_feature_round_button);
-                    gps_button.setImageResource(R.mipmap.ic_gps_off_black_48dp);
-                }
-
-                gpsStatusHandler.postDelayed(this, 1600);
-            }
-        };
-
-        gpsStatusHandler = new Handler();
-        gpsStatusHandler.post(gpsStatusUpdatingTask);
-
-
-
-        browser_button.setOnClickListener(new View.OnClickListener() {
+        browserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String URL = "http://rower.lowicz.com.pl/BicycleTracker%20www/index.php";
@@ -119,14 +77,14 @@ public class StartFragment extends Fragment {
             }
         });
 
-        logout_button.setOnClickListener(new View.OnClickListener() {
+        logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final View view = LayoutInflater.from(getActivity()).inflate(R.layout.basic_dialog, null);
 
                 TextView text = (TextView) view.findViewById(R.id.basic_dialog_text);
-                text.setText("Do you want to log out?");
+                text.setText(getString(R.string.logout_question));
 
                 builder.setView(view)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -152,12 +110,57 @@ public class StartFragment extends Fragment {
                 dialog.show();
             }
         });
+
+
+        gpsStatusHandler = new Handler();
+        gpsStatusUpdatingTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if(isGPSAvailable()) {
+                    gpsButton.setBackgroundResource(R.drawable.start_round_button);
+                    gpsButton.setImageResource(R.mipmap.ic_gps_fixed_white_48dp);
+                } else {
+                    gpsButton.setBackgroundResource(R.drawable.start_feature_round_button);
+                    gpsButton.setImageResource(R.mipmap.ic_gps_off_black_48dp);
+                }
+
+                gpsStatusHandler.postDelayed(this, 1600);
+            }
+        };
+
+        createLocationListener();
+
+        return view;
     }
 
-    private boolean isGPSFixed()
-    {
-        if(gpsFixed || ((System.currentTimeMillis() - lastLocationChangeTime < 8000) && (lastLocationChangeTime>0))) return true;
-        return false;
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(checkLocationPermission()) {
+            startLocationUpdates();
+            gpsStatusHandler.post(gpsStatusUpdatingTask);
+        } else requestLocationPermission();
+    }
+
+    @Override
+    public void onPause() {
+        stopLocationUpdates();
+        gpsStatusHandler.removeCallbacks(gpsStatusUpdatingTask);
+        super.onPause();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        provideRecreationOfTraining();
+    }
+
+    private boolean isGPSAvailable() {
+        return requestingLocationUpdates && locationProviderAvailable && (lastLocationUpdateTime > 0) &&
+                (System.currentTimeMillis() - lastLocationUpdateTime < 8000);
     }
 
     private void provideRecreationOfTraining()
@@ -217,12 +220,91 @@ public class StartFragment extends Fragment {
 
     }
 
+    private void createLocationListener() {
+        locationListener =  new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                lastLocationUpdateTime = System.currentTimeMillis();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                locationProviderAvailable = status != LocationProvider.OUT_OF_SERVICE;
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) { locationProviderAvailable = true; }
+
+            @Override
+            public void onProviderDisabled(String provider) { locationProviderAvailable = false; }
+        };
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocationUpdates() {
+        locationManager = (LocationManager)
+                getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if(locationManager != null) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATES_MINIMAL_TIME,
+                    LOCATION_UPDATES_MINIMAL_DISTANCE, locationListener);
+            requestingLocationUpdates = true;
+        }
+    }
+
+    private void stopLocationUpdates() {
+        if(requestingLocationUpdates) {
+            locationManager.removeUpdates(locationListener);
+            requestingLocationUpdates = false;
+        }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private boolean checkLocationPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Activity activity = getActivity();
+            if(activity == null) return false;
+
+            int status = ActivityCompat.checkSelfPermission(activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+            return status == PackageManager.PERMISSION_GRANTED;
+        } else return true;
+    }
+
+    private void requestLocationPermission() {
+        boolean shouldShowRationale = FragmentCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if(shouldShowRationale) {
+            Log.i(TAG, "Show location permission rationale to user.");
+            showToast(getActivity(), R.string.location_permission_rationale);
+        }
+
+        Log.i(TAG, "Requesting location permission.");
+        FragmentCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_LOCATION_PERMISSION_CODE);
+    }
 
     @Override
-    public void onStop()
-    {
-        super.onStop();
-        gpsStatusHandler.removeCallbacks(gpsStatusUpdatingTask);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_LOCATION_PERMISSION_CODE) {
+            if(permissions.length <= 0) {
+                Log.i(TAG, "User interaction was cancelled.");
+            } else if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Requesting location permission.");
+                startLocationUpdates();
+                gpsStatusHandler.post(gpsStatusUpdatingTask);
+            } else {
+                Log.i(TAG, "Location permission denied.");
+                showToast(getActivity(), R.string.location_permission_denied);
+            }
+        }
     }
+
+    private void showToast(Context context, int resId) {
+        Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
+    }
+
 
 }

@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,18 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
+
+import java.util.List;
 
 
 public class ArcheivesListFragment extends ListFragment {
@@ -69,6 +82,7 @@ public class ArcheivesListFragment extends ListFragment {
         private LayoutInflater layoutInflater;
         private Context context;
 
+
         public ActivitiesItemAdapter(Context context, Cursor c) {
             super(context, c);
             this.context = context;
@@ -90,10 +104,9 @@ public class ArcheivesListFragment extends ListFragment {
             Double distance = c.getDouble(c.getColumnIndexOrThrow("distance"));
             Integer seconds = c.getInt(c.getColumnIndexOrThrow("time"));
 
+
                 Double velocity = distance/seconds;
                 velocity*=3.6;
-
-
 
             TextView date_label = (TextView) v.findViewById(R.id.list_text1);
             TextView distance_label = (TextView) v.findViewById(R.id.list_text2);
@@ -104,7 +117,9 @@ public class ArcheivesListFragment extends ListFragment {
             distance_label.setText(TrainingActivity.generateDistanceInKilometersNotation(distance));
             time_label.setText(TrainingActivity.generateTimeNotation(seconds));
             velocity_label.setText(TrainingActivity.generateVelocityNotation(velocity));
+
         }
+
     }
 
     @Override

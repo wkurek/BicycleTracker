@@ -155,41 +155,41 @@ public class SummaryActivity extends Activity implements OnMapReadyCallback {
 
 
     @Override
-    public void onMapReady(GoogleMap map)
-    {
-        googleMap = map;
-        if(myGeoPointList!=null && !myGeoPointList.isEmpty())
+        public void onMapReady(GoogleMap map)
         {
-            latLngList = myGeoPointList.getLatLngList();
-
-            if(!(latLngList.isEmpty()))
+            googleMap = map;
+            if(myGeoPointList!=null && !myGeoPointList.isEmpty())
             {
-                PolylineOptions line = new PolylineOptions().color(Color.parseColor("#164d54")).geodesic(true);
-                LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
+                latLngList = myGeoPointList.getLatLngList();
 
-                for(LatLng latLng : latLngList)
+                if(!(latLngList.isEmpty()))
                 {
-                    line.add(latLng);
-                    boundsBuilder.include(latLng);
-                }
+                    PolylineOptions line = new PolylineOptions().color(Color.parseColor("#164d54")).geodesic(true);
+                    LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
 
-
-                final LatLngBounds latLngBounds = boundsBuilder.build();
-
-                map.addPolyline(line);
-
-                map.addMarker(new MarkerOptions().position(latLngList.getFirst()).title("Start"));
-                map.addMarker(new MarkerOptions().position(latLngList.getLast()).title("End"));
-
-                map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded()
+                    for(LatLng latLng : latLngList)
                     {
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
+                        line.add(latLng);
+                        boundsBuilder.include(latLng);
                     }
-                });
+
+
+                    final LatLngBounds latLngBounds = boundsBuilder.build();
+
+                    map.addPolyline(line);
+
+                    map.addMarker(new MarkerOptions().position(latLngList.getFirst()).title("Start"));
+                    map.addMarker(new MarkerOptions().position(latLngList.getLast()).title("End"));
+
+                    map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded()
+                        {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
+                        }
+                    });
+                }
             }
-        }
     }
 
 

@@ -15,7 +15,7 @@
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="1"
-          android:id="@+id/content_container"
+          android:id="@+id/single_goals_container"
           android:orientation="vertical">
 
 
@@ -48,8 +48,7 @@
               android:layout_marginTop="20dp"
               android:layout_gravity="center_horizontal"
               android:background="@drawable/start_round_button"
-              android:src="@drawable/sync_white"
-              android:onClick="synchronize"/>
+              android:src="@drawable/sync_white"/>
 
           <ImageButton
               android:id="@+id/delete_goal"

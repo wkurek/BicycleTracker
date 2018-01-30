@@ -4,9 +4,7 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_marginTop="12dp"
-    android:background="#ececec">
-
-
+    android:background="#f4f4f4">
 
     <LinearLayout
         android:layout_width="match_parent"

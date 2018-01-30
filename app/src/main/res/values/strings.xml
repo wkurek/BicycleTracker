@@ -19,6 +19,7 @@
     <string name="log_activity_password_input">password</string>
     <string name="log_activity_login">Log in</string>
     <string name="log_activity_register">Register</string>
+    <string name="logout_question">Do you want to log out?</string>
 
     <string name="summary_activity_save_to_databse">Save to database</string>
 
@@ -39,6 +40,10 @@
     <string name="transfer_task_success_transfer_info">Data transferred successfully</string>
     <string name="transfer_task_cancelled">Data transferred was cancelled</string>
     <string name="transfer_button">Transfer data from server</string>
+
+    <string name="single_goal_finish_date_description">Active to %1$s</string>
+    <string name="single_goal_progress_description">%1$d / %2$d km</string>
+
 
 
     <string name="gpx_version">1.1</string>
@@ -87,6 +92,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="PersonalBest">Personal records</string>
+
+
+
+    <string name="location_permission_denied">App will miss functionality due to denying location permission</string>
+    <string name="location_permission_rationale">Tracking app needs access to location</string>
 
 
 </resources>

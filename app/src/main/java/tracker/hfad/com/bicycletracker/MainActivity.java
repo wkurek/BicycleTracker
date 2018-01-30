@@ -62,11 +62,10 @@ public class MainActivity extends Activity {
                         + "finished INTEGER);");
 
             db.execSQL("CREATE TABLE GOALS ( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        +"start TEXT,"
+                        +"finish TEXT,"
                         +"max INTEGER,"
-                        +"progress INTEGER,"
-                        +"type INTEGER,"
-                        + "date TEXT," //date of end, yyyy-MM-dd HH:mm:ss format
-                        +"sync INTEGER);");
+                        +"progress INTEGER);");
         }
 
         @Override
