@@ -302,7 +302,7 @@ public class StartFragment extends Fragment {
         }
     }
 
-    private void showToast(Context context, int resId) {
+    public static void showToast(Context context, int resId) {
         Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
     }
 

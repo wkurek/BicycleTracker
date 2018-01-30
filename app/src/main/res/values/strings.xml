@@ -2,6 +2,12 @@
     <string name="app_name">BicycleTracker</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="calendar_title">Calendar</string>
+    <string name="goals_title">Training goals</string>
+    <string name="archive_title">Last trainings</string>
+    <string name="settings_title">Settings</string>
+
+
     <string name="positive_reaction">OK</string>
     <string name="negative_reaction">Cancel</string>
 
@@ -55,7 +61,7 @@
     <string-array name="options">
         <item>Main menu</item>
         <item>Start</item>
-        <item>Archeives</item>
+        <item>Archives</item>
         <item>Settings</item>
         <item>Goals</item>
         <item>Calendar</item>
@@ -78,7 +84,6 @@
         <item>month</item>
         <item>year</item>
     </string-array>
-
 
 
     <string name="Settings">Settings</string>
