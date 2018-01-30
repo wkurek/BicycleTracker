@@ -1,6 +1,5 @@
 package tracker.hfad.com.bicycletracker;
 
-import android.*;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,7 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.app.ActionBar;
@@ -108,7 +106,7 @@ public class MainActivity extends Activity {
         }
 
         drawerList = (ListView) findViewById(R.id.drawer);
-        drawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1,
+        drawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1,
                 getResources().getStringArray(R.array.options)));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -124,10 +122,10 @@ public class MainActivity extends Activity {
         if(savedInstanceState != null) {
             Log.i(TAG, "Recreate saved state of activity.");
             current = savedInstanceState.getInt(KEY_CURRENT);
-            selectItem(current);
-            drawerList.setItemChecked(current, true);
         }
 
+        selectItem(current);
+        drawerList.setItemChecked(current, true);
 
         getFragmentManager().addOnBackStackChangedListener( new android.app.FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -218,7 +216,7 @@ public class MainActivity extends Activity {
             }
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.contener, fragment, TOP_FRAGMENT_TAG);
+            ft.replace(R.id.container, fragment, TOP_FRAGMENT_TAG);
             ft.addToBackStack(null);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             setActivityBar(position);

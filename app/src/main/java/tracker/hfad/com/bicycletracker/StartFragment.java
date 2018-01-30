@@ -66,6 +66,19 @@ public class StartFragment extends Fragment {
         gpsButton = (ImageButton) view.findViewById(R.id.start_gps_button);
         ImageButton browserButton = (ImageButton) view.findViewById(R.id.start_browser_button);
         ImageButton logoutButton = (ImageButton) view.findViewById(R.id.start_logout_button);
+        ImageButton startButton = (ImageButton) view.findViewById(R.id.start_button);
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "Starting training.");
+                Activity activity = getActivity();
+                SaveSharedPreference.setStarted(activity, true);
+                Intent intent = new Intent(activity, TrainingActivity.class);
+                startActivity(intent);
+                activity.finish();
+            }
+        });
 
         browserButton.setOnClickListener(new View.OnClickListener() {
             @Override

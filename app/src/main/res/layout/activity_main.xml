@@ -6,12 +6,10 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/contener"></FrameLayout>
+        android:id="@+id/container"/>
 
     <ListView
         android:layout_width="240dp"
@@ -19,13 +17,8 @@
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:background="#ffffff"
-        android:id="@+id/drawer"
-        >
+        android:id="@+id/drawer">
 
     </ListView>
-
-
-
-
 
 </android.support.v4.widget.DrawerLayout>

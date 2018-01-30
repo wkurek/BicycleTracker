@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,13 +24,14 @@ import com.google.maps.android.PolyUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class TrainingActivity extends Activity {
+    private static final String TAG = TrainingActivity.class.getSimpleName();
 
-    private boolean connected=false, bound=false;
+    private boolean connected = false, bound = false;
     private TrackerService trackerService;
     private Handler handler, databaseHandler;
 
@@ -40,96 +40,87 @@ public class TrainingActivity extends Activity {
 
     private TrackerService.MyGeoPointList myGeoPointList;
 
+    Button pauseButton;
+    TextView timeView, distanceView, momentVelocityView, averageVelocityView,
+            caloriesView, altitudeView, gpsView;
+
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service)
-        {
-            Log.v("TrainingActivity", "polacz z usluga!");
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "Connect with service.");
             TrackerService.TrackerBinder trackerBinder = (TrackerService.TrackerBinder) service;
 
+            //TODO: consider deleting this section
             boolean recreate = SaveSharedPreference.getRecreated(getApplicationContext());
-
-            if(recreate)
-            {
+            if(recreate) {
                 trackerService = trackerBinder.getService(myGeoPointList, numberOfSeconds, distanceInMeters);
                 if(myGeoPointList != null) myGeoPointList.clear();
                 SaveSharedPreference.setRecreated(getApplicationContext(), false);
-            }
-            else trackerService =  trackerBinder.getService();
+            } else trackerService =  trackerBinder.getService();
 
-            connected=true;
+            connected = true;
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName name)
-        {
+        public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "Service disconnected.");
             connected = false;
-            Log.v("TrainingActivity", "rozlacz z usluga!");
         }
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
 
-        if(SaveSharedPreference.getRecreated(this))
-        {
+        if(SaveSharedPreference.getRecreated(this)) {
             recreateData();
         }
 
+        pauseButton = (Button) findViewById(R.id.pause_button);
 
-        final TextView training_time = (TextView) findViewById(R.id.huge_time_view);
-        final TextView training_distance = (TextView) findViewById(R.id.training_distance);
-        final TextView training_moment_velocity = (TextView) findViewById(R.id.training_moment_velocity);
-        final TextView training_avarange_velocity = (TextView) findViewById(R.id.training_avarange_velocity);
-        final TextView training_calories = (TextView) findViewById(R.id.training_calories);
-        final TextView training_altitude = (TextView) findViewById(R.id.training_altitude);
-        final TextView training_gps = (TextView) findViewById(R.id.training_gps);
+        timeView = (TextView) findViewById(R.id.huge_time_view);
+        distanceView = (TextView) findViewById(R.id.training_distance);
+        momentVelocityView = (TextView) findViewById(R.id.training_moment_velocity);
+        averageVelocityView = (TextView) findViewById(R.id.training_avarange_velocity);
+        caloriesView = (TextView) findViewById(R.id.training_calories);
+        altitudeView = (TextView) findViewById(R.id.training_altitude);
+        gpsView = (TextView) findViewById(R.id.training_gps);
 
 
-
-        handler= new Handler();
+        handler = new Handler();
         handler.post(new Runnable() {
             @Override
             public void run() {
-
-                if(connected && bound)
-                {
-                    //odmierzanie czasu:
-
+                if(connected && bound) {
+                    //Update UI with actual values
                     numberOfSeconds = trackerService.getCurrentNumberOfSeconds();
                     distanceInMeters = trackerService.getDistanceInMeters();
                     calories = trackerService.getCalories();
 
-                    float moment_velocity = trackerService.getMomentVelocity();
+                    float momentVelocity = trackerService.getMomentVelocity();
                     double altitude = trackerService.getAltitudeInMeters();
-                    double avarange_velocity = TrackerService.getAvarangePace(numberOfSeconds, distanceInMeters);
+                    double averageVelocity = TrackerService.getAvarangePace(numberOfSeconds, distanceInMeters);
 
+                    timeView.setText(generateTimeNotation(numberOfSeconds));
+                    distanceView.setText(generateDistanceInKilometersNotation(distanceInMeters));
+                    momentVelocityView.setText(generateVelocityNotation(momentVelocity));
+                    averageVelocityView.setText(generateVelocityNotation((float) averageVelocity));
+                    altitudeView.setText(generateAltitudeNotation(altitude));
+                    caloriesView.setText(generateCaloriesNotation(calories));
 
-                    training_time.setText(generateTimeNotation(numberOfSeconds));
-                    training_distance.setText(generateDistanceInKilometersNotation(distanceInMeters));
-                    training_moment_velocity.setText(generateVelocityNotation(moment_velocity));
-                    training_avarange_velocity.setText(generateVelocityNotation((float) avarange_velocity));
-                    training_altitude.setText(generateAltitudeNotation(altitude));
-                    training_calories.setText(generateCaloriesNotation(calories));
-
-                    setGPSStatus(trackerService.isGPSFixed(), training_gps);
-
+                    setGPSStatus(trackerService.isGPSFixed());
                 }
-                    handler.postDelayed(this, 1000);
+
+                handler.postDelayed(this, 1000);
             }});
 
         databaseHandler = new Handler();
         databaseHandler.post(new Runnable() {
             @Override
-            public void run()
-            {
-                if(trackerService!=null) updateData();
-
+            public void run() {
+                if(trackerService != null) updateData();
                 databaseHandler.postDelayed(this, 3*60*1000);
             }
         });
@@ -137,57 +128,47 @@ public class TrainingActivity extends Activity {
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
 
-        if(!bound)
-        {
-            Log.v("Training", "bind = false");
+        if(!bound) {
+            Log.i(TAG, "Binding service.");
             Intent intent = new Intent(TrainingActivity.this, TrackerService.class);
             bindService(intent, connection, Context.BIND_AUTO_CREATE);
             startService(intent);
             bound = true;
         }
 
-        if(trackerService == null) return;
+        if(trackerService == null) {
+            Log.i(TAG, "Cannot obtain TrackerService object.");
+            return;
+        }
 
-        Button pause = (Button) findViewById(R.id.pause_button);
-
-        if(trackerService.paused) {pause.setText(R.string.resume);}
-        else {pause.setText(R.string.pause_button);}
+        pauseButton.setText(trackerService.paused ? R.string.resume : R.string.pause_button);
     }
 
     @Override
-    protected void onPause()
-    {
-        super.onPause();
-
+    protected void onPause() {
+        Log.i(TAG, "Unbind service.");
         if(bound && connected) unbindService(connection);
-        connected=false;
-        bound=false;
+        connected = false;
+        bound = false;
 
+        super.onPause();
     }
 
 
-    public void onPauseClicked(View view)
-    {
+    public void onPauseClicked(View view) {
         trackerService.paused = !trackerService.paused;
-
-        Button pause = (Button) view;
-
-        if(trackerService.paused) {pause.setText(R.string.resume);}
-        else {pause.setText(R.string.pause_button);}
-
+        pauseButton.setText(trackerService.paused ? R.string.resume : R.string.pause_button);
     }
 
-    public void onStopClicked(View view)
-    {
+    public void onStopClicked(View view) {
+        Log.i(TAG, "Unbind service.");
         unbindService(connection);
-        connected=false;
-        bound=false;
+        connected = false;
+        bound = false;
         trackerService.paused = true;
-        //trackerService.stopSelf();
 
         Intent serviceIntent = new Intent(TrainingActivity.this, TrackerService.class);
         stopService(serviceIntent);
@@ -212,46 +193,34 @@ public class TrainingActivity extends Activity {
         int minutes = (numberOfSeconds%3600)/60;
         int secs = numberOfSeconds%60;
 
-        return String.format("%d:%02d:%02d", hours, minutes,secs);
+        return String.format(Locale.GERMANY,"%d:%02d:%02d", hours, minutes,secs);
     }
 
-    public static String generateVelocityNotation(double velocity)
-    {
+    public static String generateVelocityNotation(double velocity) {
         if(Double.isNaN(velocity)) return "0.00 km/h";
-        return String.format("%.2f km/h", velocity);
+        return String.format(Locale.GERMANY,"%.2f km/h", velocity);
     }
 
-    public static String generateDistanceInKilometersNotation(double distanceInMeters)
-    {
+    public static String generateDistanceInKilometersNotation(double distanceInMeters) {
         distanceInMeters/=1000;
-        return String.format("%.2f km", distanceInMeters);
+        return String.format(Locale.GERMANY,"%.2f km", distanceInMeters);
     }
 
-    public static String generateAltitudeNotation(double altitudeInMeters)
-    {
-        String altitude = Double.toString(altitudeInMeters) + " m";
-        return altitude;
+    public static String generateAltitudeNotation(double altitudeInMeters) {
+        return String.format(Locale.GERMANY,"%.2f m", altitudeInMeters);
     }
 
-    public static String generateCaloriesNotation(int calories)
-    {
-        String cal = Integer.toString(calories) + " cal";
-        return cal;
+    public static String generateCaloriesNotation(int calories) {
+        return String.format(Locale.GERMANY,"%s cal", calories);
     }
 
-    public void setGPSStatus(boolean isFixed, TextView textView)
-    {
-        if(textView == null) return;
-
-        if(isFixed)
-        {
-            textView.setText(R.string.training_activity_GPSConnection);
-            textView.setBackgroundResource(R.color.GPSconnection);
-        }
-        else
-        {
-            textView.setText(R.string.training_activity_noGPSConnection);
-            textView.setBackgroundResource(R.color.noGPSconnection);
+    public void setGPSStatus(boolean isFixed) {
+        if(isFixed) {
+            gpsView.setText(R.string.training_activity_GPSConnection);
+            gpsView.setBackgroundResource(R.color.GPSconnection);
+        } else {
+            gpsView.setText(R.string.training_activity_noGPSConnection);
+            gpsView.setBackgroundResource(R.color.noGPSconnection);
         }
     }
 
@@ -309,7 +278,7 @@ public class TrainingActivity extends Activity {
     {
         TrackerService.MyGeoPointList list;
         list = trackerService.getGeoPointList();
-        if(list == null || list.isEmpty()) return;;
+        if(list == null || list.isEmpty()) return;
 
         String encodedLatLngList = PolyUtil.encode(list.getLatLngList());
         String JSONEncodedGeopoints = SummaryActivity.encodeGeoPointListToJSON(list);
@@ -321,15 +290,13 @@ public class TrainingActivity extends Activity {
     }
 
     @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
+    public void onDestroy() {
+        Log.i(TAG, "Unbind service.");
         if(bound && connected) unbindService(connection);
-        connected=false;
-        bound=false;
+        connected = false;
+        bound = false;
 
-        Log.v("TrainingActivity", "onDestroy()");
+        super.onDestroy();
     }
 
 }
